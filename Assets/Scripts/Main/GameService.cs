@@ -11,17 +11,17 @@ using UnityEngine;
 
 namespace ServiceLocator.Main
 {
-    public class GameService : GenericMonoSingleton<GameService>
+    public class GameService : MonoBehaviour
     {
         // Services:
-        public Events.EventService EventService { get; private set; }
-        public MapService MapService { get; private set; }
-        public WaveService WaveService { get; private set; }
-        public SoundService SoundService { get; private set; }
-        public PlayerService PlayerService { get; private set; }
+        private Events.EventService eventService;
+        private MapService mapService;
+        private WaveService waveService;
+        private SoundService soundService;
+        private PlayerService playerService;
 
-        [SerializeField] private UIService uiService;
-        public UIService UIService => uiService;
+        [SerializeField] private UIService uIService;
+        public UIService UIService => uIService;
 
 
         // Scriptable Objects:
@@ -42,24 +42,24 @@ namespace ServiceLocator.Main
 
         private void createServices()
         {
-            EventService = new Events.EventService();
-            MapService = new MapService(mapScriptableObject);
-            WaveService = new WaveService(waveScriptableObject);
-            SoundService = new SoundService(soundScriptableObject, SFXSource, BGSource);
-            PlayerService = new PlayerService(playerScriptableObject);
+            eventService = new Events.EventService();
+            mapService = new MapService(mapScriptableObject);
+            waveService = new WaveService(waveScriptableObject);
+            soundService = new SoundService(soundScriptableObject, SFXSource, BGSource);
+            playerService = new PlayerService(playerScriptableObject);
         }
 
         private void InjectDependencies()
         {
-            PlayerService.Init(SoundService, UIService, MapService);
-            WaveService.Init(EventService, MapService, UIService, SoundService, PlayerService);
-            MapService.Init(EventService);
-            UIService.Init(EventService, WaveService, PlayerService);
+            playerService.Init(soundService, UIService, mapService);
+            waveService.Init(eventService, mapService, UIService, soundService, playerService);
+            mapService.Init(eventService);
+            UIService.Init(eventService, waveService, playerService);
         }
 
         private void Update()
         {
-            PlayerService.Update();
+            playerService.Update();
         }
     }
 }
