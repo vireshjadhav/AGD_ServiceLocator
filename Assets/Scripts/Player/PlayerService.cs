@@ -145,7 +145,7 @@ namespace ServiceLocator.Player
         public void GetReward(int reward)
         {
             Money += reward;
-            uIService.UpdateMoneyUI(Money);
+            uIService?.UpdateMoneyUI(Money);
         }
 
         private void PlayerDeath() => uIService.UpdateGameEndUI(false);

@@ -26,8 +26,6 @@ namespace ServiceLocator.Sound
                 audioEffects.clip = clip;
                 audioEffects.PlayOneShot(clip);
             }
-            else
-                Debug.LogError("No Audio Clip selected.");
         }
 
         private void PlaybackgroundMusic(SoundType soundType, bool loopSound = false)
@@ -39,8 +37,6 @@ namespace ServiceLocator.Sound
                 backgroundMusic.clip = clip;
                 backgroundMusic.Play();
             }
-            else
-                Debug.LogError("No Audio Clip selected.");
         }
 
         private AudioClip GetSoundClip(SoundType soundType)

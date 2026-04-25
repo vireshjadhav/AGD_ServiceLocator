@@ -4,6 +4,7 @@ using UnityEngine;
 using ServiceLocator.Player;
 using ServiceLocator.Player.Projectile;
 using ServiceLocator.Wave.Bloon;
+using ServiceLocator.Sound;
 
 public class MonkeyController_UnitTest
 {
@@ -13,9 +14,9 @@ public class MonkeyController_UnitTest
     public void Setup()
     {
         MonkeyScriptableObject monkeySO = CreateDummyMonkeySO();
-        //PlayerScriptableObject playerScriptableObject = CreateDummyPlayer();
-        //ProjectilePool projectilePool = CreateDummyProjectilePool();
-        //monkeyController = new MonkeyController(monkeySO, projectilePool);
+        ProjectilePool projectilePool = CreateDummyProjectilePool();
+        SoundService soundService = CreateDummySoundService();
+        monkeyController = new MonkeyController(monkeySO, projectilePool, soundService);
     }
 
     private MonkeyScriptableObject CreateDummyMonkeySO()
@@ -33,14 +34,30 @@ public class MonkeyController_UnitTest
         return monkeySO;
     }
 
-    //private ProjectilePool CreateDummyProjectilePool()
-    //{
-    //    ProjectileView projectilePrefab = new GameObject().AddComponent<ProjectileView>();
-    //    List<ProjectileScriptableObject> projectileSOs = new List<ProjectileScriptableObject>();
-    //    PlayerService playerService = new PlayerService(playerScriptableObject);
-    //    projectileSOs.Add(ScriptableObject.CreateInstance<ProjectileScriptableObject>());
-    //    return new ProjectilePool(projectilePrefab, projectileSOs);
-    //}
+    private ProjectilePool CreateDummyProjectilePool()
+    {
+        ProjectileView projectilePrefab = new GameObject().AddComponent<ProjectileView>();
+        List<ProjectileScriptableObject> projectileSOs = new List<ProjectileScriptableObject>();
+        projectileSOs.Add(ScriptableObject.CreateInstance<ProjectileScriptableObject>());
+
+        PlayerService playerService = CreaateDummyPlayerService(projectilePrefab, projectileSOs);
+        return new ProjectilePool(projectilePrefab, projectileSOs, playerService);
+    }
+
+    private PlayerService CreaateDummyPlayerService(ProjectileView projectilePrefab, List<ProjectileScriptableObject> projectileSOs)
+    {
+        PlayerScriptableObject playerSO = ScriptableObject.CreateInstance<PlayerScriptableObject>();
+        playerSO.ProjectilePrefab = projectilePrefab;
+        playerSO.ProjectileScriptableObjects = projectileSOs;
+        return new PlayerService(playerSO);
+    }
+
+    private SoundService CreateDummySoundService()
+    {
+        SoundScriptableObject soundSO = ScriptableObject.CreateInstance<SoundScriptableObject>();
+        soundSO.audioList = new Sounds[0];
+        return new SoundService(soundSO, new GameObject().AddComponent<AudioSource>(), new GameObject().AddComponent<AudioSource>());
+    }
 
     [Test]
     public void CanAttackBloon_CheckCondition()

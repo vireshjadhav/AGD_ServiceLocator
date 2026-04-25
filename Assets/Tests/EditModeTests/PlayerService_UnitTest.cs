@@ -5,7 +5,7 @@ using ServiceLocator.Player;
 using ServiceLocator.Player.Projectile;
 using System.Collections.Generic;
 
-public class PlayerService_UnitTest 
+public class PlayerService_UnitTest
 {
     private PlayerService playerService;
 
@@ -13,6 +13,8 @@ public class PlayerService_UnitTest
     public void Setup()
     {
         PlayerScriptableObject playerSO = CreateDummyPlayerSO();
+        Transform projectileContainer = new GameObject().transform;
+
         playerService = new PlayerService(playerSO);
     }
 
