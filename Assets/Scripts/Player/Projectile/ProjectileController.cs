@@ -6,6 +6,7 @@ namespace ServiceLocator.Player.Projectile
 {
     public class ProjectileController
     {
+        private PlayerService playerService;
         private ProjectileView projectileView;
         private ProjectileScriptableObject projectileScriptableObject;
 
@@ -18,8 +19,9 @@ namespace ServiceLocator.Player.Projectile
             projectileView.SetController(this);
         }
 
-        public void Init(ProjectileScriptableObject projectileScriptableObject)
+        public void Init(ProjectileScriptableObject projectileScriptableObject, PlayerService playerService)
         {
+            this.playerService = playerService;
             this.projectileScriptableObject = projectileScriptableObject;
             projectileView.SetSprite(projectileScriptableObject.Sprite);
             projectileView.gameObject.SetActive(true);
@@ -62,7 +64,7 @@ namespace ServiceLocator.Player.Projectile
         {
             target = null;
             projectileView.gameObject.SetActive(false);
-            GameService.Instance.PlayerService.ReturnProjectileToPool(this);
+            playerService.ReturnProjectileToPool(this);
         }
 
         private void SetState(ProjectileState newState) => currentState = newState;

@@ -52,9 +52,9 @@ namespace ServiceLocator.Main
         private void InjectDependencies()
         {
             PlayerService.Init(SoundService, UIService, MapService);
-            WaveService.Init(EventService, MapService, UIService,  SoundService);
+            WaveService.Init(EventService, MapService, UIService, SoundService, PlayerService);
             MapService.Init(EventService);
-            UIService.Init(EventService, WaveService);
+            UIService.Init(EventService, WaveService, PlayerService);
         }
 
         private void Update()
