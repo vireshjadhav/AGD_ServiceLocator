@@ -1,19 +1,20 @@
-using UnityEngine;
-using ServiceLocator.Utilities;
 using ServiceLocator.Events;
 using ServiceLocator.Map;
-using ServiceLocator.Wave;
-using ServiceLocator.Sound;
 using ServiceLocator.Player;
+using ServiceLocator.Sound;
 using ServiceLocator.UI;
+using ServiceLocator.Utilities;
+using ServiceLocator.Wave;
 using System;
+using UnityEditor.MPE;
+using UnityEngine;
 
 namespace ServiceLocator.Main
 {
     public class GameService : GenericMonoSingleton<GameService>
     {
         // Services:
-        public EventService EventService { get; private set; }
+        public Events.EventService EventService { get; private set; }
         public MapService MapService { get; private set; }
         public WaveService WaveService { get; private set; }
         public SoundService SoundService { get; private set; }
@@ -41,8 +42,7 @@ namespace ServiceLocator.Main
 
         private void createServices()
         {
-            EventService = new EventService();
-            UIService.SubscribeToEvents();
+            EventService = new Events.EventService();
             MapService = new MapService(mapScriptableObject);
             WaveService = new WaveService(waveScriptableObject);
             SoundService = new SoundService(soundScriptableObject, SFXSource, BGSource);
@@ -52,6 +52,9 @@ namespace ServiceLocator.Main
         private void InjectDependencies()
         {
             PlayerService.Init(SoundService, UIService, MapService);
+            WaveService.Init(EventService, MapService, UIService,  SoundService);
+            MapService.Init(EventService);
+            UIService.Init(EventService, WaveService);
         }
 
         private void Update()
